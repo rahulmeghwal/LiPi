@@ -1,0 +1,33 @@
+fx asd(){
+
+}
+fx new(u,x){
+	int e,d;
+	point t;
+	scan (e);
+	let d=d+e;
+	return u+x-e;
+}
+fx main () { 
+
+	int a,g,b,c,q,i,w,r;
+	scan(a,b,c);
+	let a=b-(c+19)*e+10;
+	new(10,b);
+	if(a<10){
+		let x=q+w*q+r-w;
+		if(b<9){
+			let q=10;
+		}
+		else{
+			let g=a+c;
+		}
+	}
+	
+	while(i<10){
+		let i=i+1;
+	}
+	
+	return a+b;
+
+}

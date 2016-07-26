@@ -1,0 +1,9 @@
+fx main () { 
+
+	int a,b,c,d,a1,w,q,a2;
+	let a=b+c*d+a2;
+	square(a1,c,w,q);
+	let d=b+c*d;
+	new(b,a,w);
+
+}

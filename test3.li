@@ -1,0 +1,34 @@
+fx new (){
+}
+fx main (){ 
+
+	int a1[10],a2[2][2],a,b,c,d,g,n;
+	char a3;
+	point x;
+	scan(a,b,c);
+
+	let a=(b)+(a-d)+d+33+24;
+
+	if(10==b){
+		if(a>11){
+			let a=b;		
+		}
+		else{
+			if(a<='1'){
+				let a=a-b;
+			}
+			else{
+				let g=g-b;
+			}
+			let n=n+1;
+		}
+		let g=g*g;
+	}
+	else{
+		while(i<10){
+			let a=a+1;
+		}
+		let a=b;
+	}
+	a(b,32);
+}

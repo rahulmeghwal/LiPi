@@ -1,0 +1,1201 @@
+   0  $accept : file $end
+
+   1  file : program
+
+   2  program : funcs funcmain
+
+   3  funcs : funcs func
+   4        |
+
+   5  func : FX ID '(' fparameters ')' funcblock
+
+   6  fparameters : formal
+   7              |
+
+   8  formal : fvar
+   9         | formal COMMA fvar
+
+  10  funcblock : OCB stmt return CCB
+
+  11  return : RETURN expr DELIMITER
+  12         |
+
+  13  funcmain : FX MAIN '(' fparameters ')' funcblock
+
+  14  block : OCB stmt CCB
+
+  15  stmt : stmt declare DELIMITER
+  16       | stmt assign DELIMITER
+  17       | stmt call DELIMITER
+  18       | stmt input DELIMITER
+  19       | stmt compare
+  20       | stmt wloop
+  21       |
+
+  22  declare : type stream
+
+  23  type : INT
+  24       | CHAR
+  25       | POINT
+
+  26  stream : var
+  27         | stream COMMA var
+
+  28  fvar : ID
+
+  29  var : ID
+  30      | array
+
+  31  array : ID OSB INTLIT CSB
+  32        | ID OSB INTLIT CSB OSB INTLIT CSB
+
+  33  assign : LET ID '=' expr
+
+  34  expr : expr '+' term
+  35       | expr '-' term
+  36       | term
+
+  37  term : term '*' factor
+  38       | term '/' factor
+  39       | term '%' factor
+  40       | factor
+
+  41  factor : '(' expr ')'
+  42         | ID
+  43         | call
+  44         | INTLIT
+
+  45  compare : IF '(' condition ')' block
+  46          | IF '(' condition ')' block ELSE block
+
+  47  wloop : WHILE '(' condition ')' block
+
+  48  call : ID '(' aparameters ')'
+
+  49  aparameters : actual
+  50              |
+
+  51  actual : var1
+  52         | actual COMMA var1
+
+  53  var1 : ID
+  54       | INTLIT
+
+  55  condition : XID RL XID
+  56            | XID RG XID
+  57            | XID RLE XID
+  58            | XID RGE XID
+  59            | XID RE XID
+  60            | XID RNE XID
+
+  61  XID : ID
+  62      | lits
+
+  63  lits : INTLIT
+  64       | CHARLIT
+
+  65  input : SCAN '(' sstream ')'
+
+  66  sstream : ID
+  67          | sstream COMMA ID
+
+state 0
+	$accept : . file $end  (0)
+	funcs : .  (4)
+
+	.  reduce 4
+
+	file  goto 1
+	funcs  goto 2
+	program  goto 3
+
+
+state 1
+	$accept : file . $end  (0)
+
+	$end  accept
+
+
+state 2
+	program : funcs . funcmain  (2)
+	funcs : funcs . func  (3)
+
+	FX  shift 4
+	.  error
+
+	func  goto 5
+	funcmain  goto 6
+
+
+state 3
+	file : program .  (1)
+
+	.  reduce 1
+
+
+state 4
+	func : FX . ID '(' fparameters ')' funcblock  (5)
+	funcmain : FX . MAIN '(' fparameters ')' funcblock  (13)
+
+	MAIN  shift 7
+	ID  shift 8
+	.  error
+
+
+state 5
+	funcs : funcs func .  (3)
+
+	.  reduce 3
+
+
+state 6
+	program : funcs funcmain .  (2)
+
+	.  reduce 2
+
+
+state 7
+	funcmain : FX MAIN . '(' fparameters ')' funcblock  (13)
+
+	'('  shift 9
+	.  error
+
+
+state 8
+	func : FX ID . '(' fparameters ')' funcblock  (5)
+
+	'('  shift 10
+	.  error
+
+
+state 9
+	funcmain : FX MAIN '(' . fparameters ')' funcblock  (13)
+	fparameters : .  (7)
+
+	ID  shift 11
+	')'  reduce 7
+
+	fvar  goto 12
+	formal  goto 13
+	fparameters  goto 14
+
+
+state 10
+	func : FX ID '(' . fparameters ')' funcblock  (5)
+	fparameters : .  (7)
+
+	ID  shift 11
+	')'  reduce 7
+
+	fvar  goto 12
+	formal  goto 13
+	fparameters  goto 15
+
+
+state 11
+	fvar : ID .  (28)
+
+	.  reduce 28
+
+
+state 12
+	formal : fvar .  (8)
+
+	.  reduce 8
+
+
+state 13
+	fparameters : formal .  (6)
+	formal : formal . COMMA fvar  (9)
+
+	COMMA  shift 16
+	')'  reduce 6
+
+
+state 14
+	funcmain : FX MAIN '(' fparameters . ')' funcblock  (13)
+
+	')'  shift 17
+	.  error
+
+
+state 15
+	func : FX ID '(' fparameters . ')' funcblock  (5)
+
+	')'  shift 18
+	.  error
+
+
+state 16
+	formal : formal COMMA . fvar  (9)
+
+	ID  shift 11
+	.  error
+
+	fvar  goto 19
+
+
+state 17
+	funcmain : FX MAIN '(' fparameters ')' . funcblock  (13)
+
+	OCB  shift 20
+	.  error
+
+	funcblock  goto 21
+
+
+state 18
+	func : FX ID '(' fparameters ')' . funcblock  (5)
+
+	OCB  shift 20
+	.  error
+
+	funcblock  goto 22
+
+
+state 19
+	formal : formal COMMA fvar .  (9)
+
+	.  reduce 9
+
+
+state 20
+	funcblock : OCB . stmt return CCB  (10)
+	stmt : .  (21)
+
+	.  reduce 21
+
+	stmt  goto 23
+
+
+state 21
+	funcmain : FX MAIN '(' fparameters ')' funcblock .  (13)
+
+	.  reduce 13
+
+
+state 22
+	func : FX ID '(' fparameters ')' funcblock .  (5)
+
+	.  reduce 5
+
+
+state 23
+	funcblock : OCB stmt . return CCB  (10)
+	stmt : stmt . declare DELIMITER  (15)
+	stmt : stmt . assign DELIMITER  (16)
+	stmt : stmt . call DELIMITER  (17)
+	stmt : stmt . input DELIMITER  (18)
+	stmt : stmt . compare  (19)
+	stmt : stmt . wloop  (20)
+	return : .  (12)
+
+	LET  shift 24
+	INT  shift 25
+	POINT  shift 26
+	CHAR  shift 27
+	RETURN  shift 28
+	IF  shift 29
+	WHILE  shift 30
+	SCAN  shift 31
+	ID  shift 32
+	CCB  reduce 12
+
+	assign  goto 33
+	call  goto 34
+	type  goto 35
+	declare  goto 36
+	input  goto 37
+	return  goto 38
+	compare  goto 39
+	wloop  goto 40
+
+
+state 24
+	assign : LET . ID '=' expr  (33)
+
+	ID  shift 41
+	.  error
+
+
+state 25
+	type : INT .  (23)
+
+	.  reduce 23
+
+
+state 26
+	type : POINT .  (25)
+
+	.  reduce 25
+
+
+state 27
+	type : CHAR .  (24)
+
+	.  reduce 24
+
+
+state 28
+	return : RETURN . expr DELIMITER  (11)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	expr  goto 45
+	term  goto 46
+	factor  goto 47
+	call  goto 48
+
+
+state 29
+	compare : IF . '(' condition ')' block  (45)
+	compare : IF . '(' condition ')' block ELSE block  (46)
+
+	'('  shift 49
+	.  error
+
+
+state 30
+	wloop : WHILE . '(' condition ')' block  (47)
+
+	'('  shift 50
+	.  error
+
+
+state 31
+	input : SCAN . '(' sstream ')'  (65)
+
+	'('  shift 51
+	.  error
+
+
+state 32
+	call : ID . '(' aparameters ')'  (48)
+
+	'('  shift 52
+	.  error
+
+
+state 33
+	stmt : stmt assign . DELIMITER  (16)
+
+	DELIMITER  shift 53
+	.  error
+
+
+state 34
+	stmt : stmt call . DELIMITER  (17)
+
+	DELIMITER  shift 54
+	.  error
+
+
+state 35
+	declare : type . stream  (22)
+
+	ID  shift 55
+	.  error
+
+	var  goto 56
+	stream  goto 57
+	array  goto 58
+
+
+state 36
+	stmt : stmt declare . DELIMITER  (15)
+
+	DELIMITER  shift 59
+	.  error
+
+
+state 37
+	stmt : stmt input . DELIMITER  (18)
+
+	DELIMITER  shift 60
+	.  error
+
+
+state 38
+	funcblock : OCB stmt return . CCB  (10)
+
+	CCB  shift 61
+	.  error
+
+
+state 39
+	stmt : stmt compare .  (19)
+
+	.  reduce 19
+
+
+state 40
+	stmt : stmt wloop .  (20)
+
+	.  reduce 20
+
+
+state 41
+	assign : LET ID . '=' expr  (33)
+
+	'='  shift 62
+	.  error
+
+
+state 42
+	factor : ID .  (42)
+	call : ID . '(' aparameters ')'  (48)
+
+	'('  shift 52
+	DELIMITER  reduce 42
+	')'  reduce 42
+	'+'  reduce 42
+	'-'  reduce 42
+	'*'  reduce 42
+	'/'  reduce 42
+	'%'  reduce 42
+
+
+state 43
+	factor : INTLIT .  (44)
+
+	.  reduce 44
+
+
+state 44
+	factor : '(' . expr ')'  (41)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	expr  goto 63
+	term  goto 46
+	factor  goto 47
+	call  goto 48
+
+
+state 45
+	return : RETURN expr . DELIMITER  (11)
+	expr : expr . '+' term  (34)
+	expr : expr . '-' term  (35)
+
+	DELIMITER  shift 64
+	'+'  shift 65
+	'-'  shift 66
+	.  error
+
+
+state 46
+	expr : term .  (36)
+	term : term . '*' factor  (37)
+	term : term . '/' factor  (38)
+	term : term . '%' factor  (39)
+
+	'*'  shift 67
+	'/'  shift 68
+	'%'  shift 69
+	DELIMITER  reduce 36
+	')'  reduce 36
+	'+'  reduce 36
+	'-'  reduce 36
+
+
+state 47
+	term : factor .  (40)
+
+	.  reduce 40
+
+
+state 48
+	factor : call .  (43)
+
+	.  reduce 43
+
+
+state 49
+	compare : IF '(' . condition ')' block  (45)
+	compare : IF '(' . condition ')' block ELSE block  (46)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 73
+	lits  goto 74
+	condition  goto 75
+
+
+state 50
+	wloop : WHILE '(' . condition ')' block  (47)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 73
+	lits  goto 74
+	condition  goto 76
+
+
+state 51
+	input : SCAN '(' . sstream ')'  (65)
+
+	ID  shift 77
+	.  error
+
+	sstream  goto 78
+
+
+state 52
+	call : ID '(' . aparameters ')'  (48)
+	aparameters : .  (50)
+
+	ID  shift 79
+	INTLIT  shift 80
+	')'  reduce 50
+
+	actual  goto 81
+	aparameters  goto 82
+	var1  goto 83
+
+
+state 53
+	stmt : stmt assign DELIMITER .  (16)
+
+	.  reduce 16
+
+
+state 54
+	stmt : stmt call DELIMITER .  (17)
+
+	.  reduce 17
+
+
+state 55
+	var : ID .  (29)
+	array : ID . OSB INTLIT CSB  (31)
+	array : ID . OSB INTLIT CSB OSB INTLIT CSB  (32)
+
+	OSB  shift 84
+	COMMA  reduce 29
+	DELIMITER  reduce 29
+
+
+state 56
+	stream : var .  (26)
+
+	.  reduce 26
+
+
+state 57
+	declare : type stream .  (22)
+	stream : stream . COMMA var  (27)
+
+	COMMA  shift 85
+	DELIMITER  reduce 22
+
+
+state 58
+	var : array .  (30)
+
+	.  reduce 30
+
+
+state 59
+	stmt : stmt declare DELIMITER .  (15)
+
+	.  reduce 15
+
+
+state 60
+	stmt : stmt input DELIMITER .  (18)
+
+	.  reduce 18
+
+
+state 61
+	funcblock : OCB stmt return CCB .  (10)
+
+	.  reduce 10
+
+
+state 62
+	assign : LET ID '=' . expr  (33)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	expr  goto 86
+	term  goto 46
+	factor  goto 47
+	call  goto 48
+
+
+state 63
+	expr : expr . '+' term  (34)
+	expr : expr . '-' term  (35)
+	factor : '(' expr . ')'  (41)
+
+	')'  shift 87
+	'+'  shift 65
+	'-'  shift 66
+	.  error
+
+
+state 64
+	return : RETURN expr DELIMITER .  (11)
+
+	.  reduce 11
+
+
+state 65
+	expr : expr '+' . term  (34)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	term  goto 88
+	factor  goto 47
+	call  goto 48
+
+
+state 66
+	expr : expr '-' . term  (35)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	term  goto 89
+	factor  goto 47
+	call  goto 48
+
+
+state 67
+	term : term '*' . factor  (37)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	factor  goto 90
+	call  goto 48
+
+
+state 68
+	term : term '/' . factor  (38)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	factor  goto 91
+	call  goto 48
+
+
+state 69
+	term : term '%' . factor  (39)
+
+	ID  shift 42
+	INTLIT  shift 43
+	'('  shift 44
+	.  error
+
+	factor  goto 92
+	call  goto 48
+
+
+state 70
+	XID : ID .  (61)
+
+	.  reduce 61
+
+
+state 71
+	lits : INTLIT .  (63)
+
+	.  reduce 63
+
+
+state 72
+	lits : CHARLIT .  (64)
+
+	.  reduce 64
+
+
+state 73
+	condition : XID . RL XID  (55)
+	condition : XID . RG XID  (56)
+	condition : XID . RLE XID  (57)
+	condition : XID . RGE XID  (58)
+	condition : XID . RE XID  (59)
+	condition : XID . RNE XID  (60)
+
+	RL  shift 93
+	RG  shift 94
+	RLE  shift 95
+	RGE  shift 96
+	RE  shift 97
+	RNE  shift 98
+	.  error
+
+
+state 74
+	XID : lits .  (62)
+
+	.  reduce 62
+
+
+state 75
+	compare : IF '(' condition . ')' block  (45)
+	compare : IF '(' condition . ')' block ELSE block  (46)
+
+	')'  shift 99
+	.  error
+
+
+state 76
+	wloop : WHILE '(' condition . ')' block  (47)
+
+	')'  shift 100
+	.  error
+
+
+state 77
+	sstream : ID .  (66)
+
+	.  reduce 66
+
+
+state 78
+	input : SCAN '(' sstream . ')'  (65)
+	sstream : sstream . COMMA ID  (67)
+
+	COMMA  shift 101
+	')'  shift 102
+	.  error
+
+
+state 79
+	var1 : ID .  (53)
+
+	.  reduce 53
+
+
+state 80
+	var1 : INTLIT .  (54)
+
+	.  reduce 54
+
+
+state 81
+	aparameters : actual .  (49)
+	actual : actual . COMMA var1  (52)
+
+	COMMA  shift 103
+	')'  reduce 49
+
+
+state 82
+	call : ID '(' aparameters . ')'  (48)
+
+	')'  shift 104
+	.  error
+
+
+state 83
+	actual : var1 .  (51)
+
+	.  reduce 51
+
+
+state 84
+	array : ID OSB . INTLIT CSB  (31)
+	array : ID OSB . INTLIT CSB OSB INTLIT CSB  (32)
+
+	INTLIT  shift 105
+	.  error
+
+
+state 85
+	stream : stream COMMA . var  (27)
+
+	ID  shift 55
+	.  error
+
+	var  goto 106
+	array  goto 58
+
+
+state 86
+	assign : LET ID '=' expr .  (33)
+	expr : expr . '+' term  (34)
+	expr : expr . '-' term  (35)
+
+	'+'  shift 65
+	'-'  shift 66
+	DELIMITER  reduce 33
+
+
+state 87
+	factor : '(' expr ')' .  (41)
+
+	.  reduce 41
+
+
+state 88
+	expr : expr '+' term .  (34)
+	term : term . '*' factor  (37)
+	term : term . '/' factor  (38)
+	term : term . '%' factor  (39)
+
+	'*'  shift 67
+	'/'  shift 68
+	'%'  shift 69
+	DELIMITER  reduce 34
+	')'  reduce 34
+	'+'  reduce 34
+	'-'  reduce 34
+
+
+state 89
+	expr : expr '-' term .  (35)
+	term : term . '*' factor  (37)
+	term : term . '/' factor  (38)
+	term : term . '%' factor  (39)
+
+	'*'  shift 67
+	'/'  shift 68
+	'%'  shift 69
+	DELIMITER  reduce 35
+	')'  reduce 35
+	'+'  reduce 35
+	'-'  reduce 35
+
+
+state 90
+	term : term '*' factor .  (37)
+
+	.  reduce 37
+
+
+state 91
+	term : term '/' factor .  (38)
+
+	.  reduce 38
+
+
+state 92
+	term : term '%' factor .  (39)
+
+	.  reduce 39
+
+
+state 93
+	condition : XID RL . XID  (55)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 107
+	lits  goto 74
+
+
+state 94
+	condition : XID RG . XID  (56)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 108
+	lits  goto 74
+
+
+state 95
+	condition : XID RLE . XID  (57)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 109
+	lits  goto 74
+
+
+state 96
+	condition : XID RGE . XID  (58)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 110
+	lits  goto 74
+
+
+state 97
+	condition : XID RE . XID  (59)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 111
+	lits  goto 74
+
+
+state 98
+	condition : XID RNE . XID  (60)
+
+	ID  shift 70
+	INTLIT  shift 71
+	CHARLIT  shift 72
+	.  error
+
+	XID  goto 112
+	lits  goto 74
+
+
+state 99
+	compare : IF '(' condition ')' . block  (45)
+	compare : IF '(' condition ')' . block ELSE block  (46)
+
+	OCB  shift 113
+	.  error
+
+	block  goto 114
+
+
+state 100
+	wloop : WHILE '(' condition ')' . block  (47)
+
+	OCB  shift 113
+	.  error
+
+	block  goto 115
+
+
+state 101
+	sstream : sstream COMMA . ID  (67)
+
+	ID  shift 116
+	.  error
+
+
+state 102
+	input : SCAN '(' sstream ')' .  (65)
+
+	.  reduce 65
+
+
+state 103
+	actual : actual COMMA . var1  (52)
+
+	ID  shift 79
+	INTLIT  shift 80
+	.  error
+
+	var1  goto 117
+
+
+state 104
+	call : ID '(' aparameters ')' .  (48)
+
+	.  reduce 48
+
+
+state 105
+	array : ID OSB INTLIT . CSB  (31)
+	array : ID OSB INTLIT . CSB OSB INTLIT CSB  (32)
+
+	CSB  shift 118
+	.  error
+
+
+state 106
+	stream : stream COMMA var .  (27)
+
+	.  reduce 27
+
+
+state 107
+	condition : XID RL XID .  (55)
+
+	.  reduce 55
+
+
+state 108
+	condition : XID RG XID .  (56)
+
+	.  reduce 56
+
+
+state 109
+	condition : XID RLE XID .  (57)
+
+	.  reduce 57
+
+
+state 110
+	condition : XID RGE XID .  (58)
+
+	.  reduce 58
+
+
+state 111
+	condition : XID RE XID .  (59)
+
+	.  reduce 59
+
+
+state 112
+	condition : XID RNE XID .  (60)
+
+	.  reduce 60
+
+
+state 113
+	block : OCB . stmt CCB  (14)
+	stmt : .  (21)
+
+	.  reduce 21
+
+	stmt  goto 119
+
+
+state 114
+	compare : IF '(' condition ')' block .  (45)
+	compare : IF '(' condition ')' block . ELSE block  (46)
+
+	ELSE  shift 120
+	LET  reduce 45
+	INT  reduce 45
+	POINT  reduce 45
+	CHAR  reduce 45
+	RETURN  reduce 45
+	IF  reduce 45
+	WHILE  reduce 45
+	CCB  reduce 45
+	SCAN  reduce 45
+	ID  reduce 45
+
+
+state 115
+	wloop : WHILE '(' condition ')' block .  (47)
+
+	.  reduce 47
+
+
+state 116
+	sstream : sstream COMMA ID .  (67)
+
+	.  reduce 67
+
+
+state 117
+	actual : actual COMMA var1 .  (52)
+
+	.  reduce 52
+
+
+state 118
+	array : ID OSB INTLIT CSB .  (31)
+	array : ID OSB INTLIT CSB . OSB INTLIT CSB  (32)
+
+	OSB  shift 121
+	COMMA  reduce 31
+	DELIMITER  reduce 31
+
+
+state 119
+	block : OCB stmt . CCB  (14)
+	stmt : stmt . declare DELIMITER  (15)
+	stmt : stmt . assign DELIMITER  (16)
+	stmt : stmt . call DELIMITER  (17)
+	stmt : stmt . input DELIMITER  (18)
+	stmt : stmt . compare  (19)
+	stmt : stmt . wloop  (20)
+
+	LET  shift 24
+	INT  shift 25
+	POINT  shift 26
+	CHAR  shift 27
+	IF  shift 29
+	WHILE  shift 30
+	CCB  shift 122
+	SCAN  shift 31
+	ID  shift 32
+	.  error
+
+	assign  goto 33
+	call  goto 34
+	type  goto 35
+	declare  goto 36
+	input  goto 37
+	compare  goto 39
+	wloop  goto 40
+
+
+state 120
+	compare : IF '(' condition ')' block ELSE . block  (46)
+
+	OCB  shift 113
+	.  error
+
+	block  goto 123
+
+
+state 121
+	array : ID OSB INTLIT CSB OSB . INTLIT CSB  (32)
+
+	INTLIT  shift 124
+	.  error
+
+
+state 122
+	block : OCB stmt CCB .  (14)
+
+	.  reduce 14
+
+
+state 123
+	compare : IF '(' condition ')' block ELSE block .  (46)
+
+	.  reduce 46
+
+
+state 124
+	array : ID OSB INTLIT CSB OSB INTLIT . CSB  (32)
+
+	CSB  shift 125
+	.  error
+
+
+state 125
+	array : ID OSB INTLIT CSB OSB INTLIT CSB .  (32)
+
+	.  reduce 32
+
+
+40 terminals, 33 nonterminals
+68 grammar rules, 126 states
