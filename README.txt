@@ -1,4 +1,7 @@
 This is a project to demonstrate the use of lex and yacc tools for developing a compiler.
+
+For details on grammer of LiPi language please open LiPi.pdf commited in the code.
+
 Currently the comipler generates intermediate code for given LiPi script (with no syntax error).
 
 To generate the intermediate code for a LiPi script run the following command :
